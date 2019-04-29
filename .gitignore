@@ -1,2 +1,4 @@
 angular-front/node_modules/
 node-server/node_modules/
+node-server/config/keys.js
+angular-front/src/config/keys.ts
