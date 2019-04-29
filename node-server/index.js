@@ -2,12 +2,29 @@
 // Load dependencies
 const express = require('express');
 const app = express();
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const keys = require('./config/keys');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+
+// We are going to implement a JWT middleware that will ensure the validity of our token. We'll require each protected route to have a valid access_token sent in the Authorization header
+const authCheck = jwt({
+  secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: keys.node_auth0.domain + "/.well-known/jwks.json"
+    }),
+    // This is the identifier we set when we created the API
+    audience: keys.node_auth0.audience,
+    issuer: keys.node_auth0.issuer, // e.g., you.auth0.com
+    algorithms: ['RS256']
+});
 
 // Public route
 app.get('/api/deals/public', (req, res)=>{
@@ -59,7 +76,7 @@ app.get('/api/deals/public', (req, res)=>{
 })
 
 // Private route
-app.get('/api/deals/private', (req,res)=>{
+app.get('/api/deals/private', authCheck, (req,res)=>{
     let deals = [
         {
           id: 14423,
