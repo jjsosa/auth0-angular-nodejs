@@ -1,9 +1,18 @@
+import { keys } from 'src/config/keys';
+
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  auth: {
+    clientID: keys.clientId,
+    domain: keys.domain, // e.g., you.auth0.com
+    audience: keys.audience, // e.g., http://localhost:3001
+    redirect: keys.redirect,
+    scope: 'openid profile email'
+  }
 };
 
 /*
