@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CallbackComponent } from './callback.component';
 import { PublicDealsComponent } from './public-deals/public-deals.component';
 import { PrivateDealsComponent } from './private-deals/private-deals.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
@@ -16,7 +17,10 @@ const routes: Routes = [
   },
   {
     path: 'special',
-    component: PrivateDealsComponent
+    component: PrivateDealsComponent,
+    canActivate: [
+      AuthGuard
+    ]
   },
   {
     path: 'callback',
@@ -26,6 +30,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }
